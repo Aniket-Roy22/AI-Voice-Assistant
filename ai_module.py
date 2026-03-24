@@ -3,21 +3,21 @@ import json
 import os
 
 def aiResponse(prompt: str) -> str:
-    response = requests.post (
-        url="https://openrouter.ai/api/v1/chat/completions",
-        headers =
-        {
-            "Authorization": "Bearer " + os.getenv("deepseek-client-key"),
-            "Content-Type": "application/json",
-        },
-        data=json.dumps(
-        {
-            "model": "deepseek/deepseek-r1-distill-llama-70b:free",
-            "messages": [
-            {
-                "role": "user",
-                "content": prompt,
-            }],
-        })
-    )
+    api_key = os.getenv("deepseek-client-key")
+    response = requests.post(
+	url="https://openrouter.ai/api/v1/chat/completions",
+	headers={
+		"Authorization": "Bearer " + api_key,
+	},
+	data=json.dumps({
+		"messages": [
+		{
+			"role": "user",
+			"content": prompt
+		}
+		]
+	})
+	)
+
+    response.raise_for_status()
     return response.json()["choices"][0]["message"]["content"]
